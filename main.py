@@ -1,79 +1,53 @@
-# Import module 
-from tkinter import *
+import tkinter as tk
 
-# Create object 
-root = Tk()
-root.title('Tic-Tac-Toe') 
-root.geometry("860x613") 
+# Game board and player
+board = [["", "", ""], ["", "", ""], ["", "", ""]]
+current_player = ["X"]
 
-# Add image file 
-bg = PhotoImage(file = "board.png")
-x_img = PhotoImage(file='x_player.png')
-o_img = PhotoImage(file='O_player.png')
+def switch_player():
+    """Switches the player between X and O."""
+    current_player[0] = "O" if current_player[0] == "X" else "X"
+    player_label.config(text=f"It's {current_player[0]}'s turn.") 
 
-# Show image using label 
-label1 = Label( root, image=bg)
-label1.place(x=0, y=0, relwidth=1, relheight=1)
+def make_move(i, j):
+    """Handles button click, updates text, and switches players."""
+    if board[i][j] == "":
+        board[i][j] = current_player[0]
+        board_buttons[i][j].config(text=current_player[0])
+        switch_player()
 
-board = [[None, None, None],
-         [None, None, None],
-         [None, None, None]]
+def show_active_player():
+    """Displays the current player's turn."""
+    global player_label
+    player_label = tk.Label(root, text=f"It's {current_player[0]}'s turn.", font=("Cambria", 14, "bold"))
+    player_label.grid(row=0, column=0, columnspan=3, pady=10)
 
-current_player = 'X'
+def make_move_buttons():
+    """Creates a 3x3 button grid for the Tic-Tac-Toe board."""
+    global board_buttons
+    board_buttons = []
 
-buttons = [[None, None, None] for _ in range(3)]
+    button_size = 3 
 
-def on_click(row, col):
-    global current_player
+    for i in range(3):
+        row_buttons = []
+        for j in range(3):
+            move_button = tk.Button(root, text='', font=("Cambria", 16), width=6, height=3,  # Adjusted button size
+                                    command=lambda r=i, c=j: make_move(r, c))
+            move_button.grid(row=i+1, column=j, padx=0, pady=0, sticky="nsew")  # No padding to stick them together
+            row_buttons.append(move_button)
+        board_buttons.append(row_buttons)
 
-    if board[row][col] is None:
-        board[row][col] = current_player
+    for i in range(3):
+        root.grid_columnconfigure(i, weight=1, uniform="equal")
+        root.grid_rowconfigure(i+1, weight=1, uniform="equal")
 
-        if current_player == "x":
-            buttons[row][col].config(image=x_img)
-        else:
-            buttons[row][col].config(image=o_img)
+root = tk.Tk()
+root.title("Tic Tac Toe")
+root.geometry("350x350")  # Adjusted window size
 
-        if check_winner():
-            print(f'{current_player} WINS!')
-            reset_board()
-        else:
-            current_player = 'O' if current_player == "X" else "X"
+# Initialize UI
+show_active_player()
+make_move_buttons()
 
-def check_winner():
-    for row in board:
-        if row in board:
-            if row[0] == row[1] == row[2] and row[0] is not None:
-                return True
-    for col in range(3):
-        if board[0][col] == board[1][col] == board[2][col] and board[0][col] is not None:
-            return True
-    if board[0][0] == board[1][1] == board[1][1] == board[2][2] and board[0][0] is not None:
-        return True
-    if board[0][2] == board[1][1] == board [2][0] and board[0][2] is not None:
-        return True
-    return False
-
-def reset_board():
-    global current_player
-    current_player = 'X'
-    for r in range(3):
-        for c in range(3):
-            board[r][c] = None
-            buttons[r][c].config(image='')
-
-button_size = 10
-x_offset = 130
-y_offset = 41
-spacing = 0
-
-
-for r in range(3):
-    for c in range(3):
-        btn = Button(root, image="", width=button_size, height=button_size, borderwidth=0,
-                     command=lambda row=r, col=c: on_click(row, col))
-        btn.place(x=x_offset + c * button_size, y=y_offset + r * button_size)
-        buttons[r][c] = btn
-
-# Execute tkinter 
 root.mainloop()
