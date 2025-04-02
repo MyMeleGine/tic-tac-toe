@@ -32,10 +32,11 @@ def check_winner():
     return False
 
 def display_winner(message):
-    player_label.config(text=message, fg="green")
+    color= 'red' if message == "It's a Draw!" else 'green'
+    player_label.config(text=message, fg=color)
     for row in board_buttons:
         for button in row:
-            button.config(state="disabled")  # Disable all buttons
+            button.config(state="disabled")
 
 def switch_player():
     """Switches the player between X and O."""
