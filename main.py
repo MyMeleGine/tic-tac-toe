@@ -4,26 +4,58 @@ import tkinter as tk
 board = [["", "", ""], ["", "", ""], ["", "", ""]]
 current_player = ["X"]
 
+def check_winner():
+    """Checks if a player has won and displays a message."""
+    winning_combinations = [
+        [(0, 0), (0, 1), (0, 2)],  # Row 1
+        [(1, 0), (1, 1), (1, 2)],  # Row 2
+        [(2, 0), (2, 1), (2, 2)],  # Row 3
+        [(0, 0), (1, 0), (2, 0)],  # Column 1
+        [(0, 1), (1, 1), (2, 1)],  # Column 2
+        [(0, 2), (1, 2), (2, 2)],  # Column 3
+        [(0, 0), (1, 1), (2, 2)],  # Diagonal \
+        [(0, 2), (1, 1), (2, 0)]   # Diagonal /
+    ]
+
+    for combo in winning_combinations:
+        if board[combo[0][0]][combo[0][1]] == current_player[0] and \
+           board[combo[1][0]][combo[1][1]] == current_player[0] and \
+           board[combo[2][0]][combo[2][1]] == current_player[0]:
+            display_winner(f"Player {current_player[0]} Wins!")
+            return True
+
+    # Check for a draw
+    if all(board[i][j] != "" for i in range(3) for j in range(3)):
+        display_winner("It's a Draw!")
+        return True
+
+    return False
+
+def display_winner(message):
+    player_label.config(text=message, fg="green")
+    for row in board_buttons:
+        for button in row:
+            button.config(state="disabled")  # Disable all buttons
+
 def switch_player():
     """Switches the player between X and O."""
     current_player[0] = "O" if current_player[0] == "X" else "X"
     player_label.config(text=f"It's {current_player[0]}'s turn.") 
 
 def make_move(i, j):
-    """Handles button click, updates text, and switches players."""
     if board[i][j] == "":
         board[i][j] = current_player[0]
         board_buttons[i][j].config(text=current_player[0])
+        if check_winner():
+            return
         switch_player()
 
 def show_active_player():
-    """Displays the current player's turn."""
     global player_label
     player_label = tk.Label(root, text=f"It's {current_player[0]}'s turn.", font=("Cambria", 14, "bold"))
     player_label.grid(row=0, column=0, columnspan=3, pady=10)
 
 def make_move_buttons():
-    """Creates a 3x3 button grid for the Tic-Tac-Toe board."""
     global board_buttons
     board_buttons = []
 
@@ -44,7 +76,7 @@ def make_move_buttons():
 
 root = tk.Tk()
 root.title("Tic Tac Toe")
-root.geometry("350x350")  # Adjusted window size
+root.geometry("350x350")
 
 # Initialize UI
 show_active_player()
