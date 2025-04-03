@@ -23,7 +23,6 @@ def check_winner():
             display_winner(f"Player {current_player[0]} Wins!")
             return True
 
-    # Check for a draw
     if all(board[i][j] != "" for i in range(3) for j in range(3)):
         display_winner("It's a Draw!")
         return True
@@ -82,9 +81,9 @@ def make_move_buttons():
     for i in range(3):
         row_buttons = []
         for j in range(3):
-            move_button = tk.Button(root, text='', font=("Cambria", 16), width=6, height=3,  # Adjusted button size
+            move_button = tk.Button(root, text='', font=("Cambria", 16), width=6, height=3,
                                     command=lambda r=i, c=j: make_move(r, c))
-            move_button.grid(row=i+1, column=j, padx=0, pady=0, sticky="nsew")  # No padding to stick them together
+            move_button.grid(row=i+1, column=j, padx=0, pady=0, sticky="nsew")
             row_buttons.append(move_button)
         board_buttons.append(row_buttons)
 
