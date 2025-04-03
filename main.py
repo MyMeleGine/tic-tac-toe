@@ -34,9 +34,13 @@ def check_winner():
 def display_winner(message):
     color= 'red' if message == "It's a Draw!" else 'green'
     player_label.config(text=message, fg=color)
+    
     for row in board_buttons:
         for button in row:
             button.config(state="disabled")
+    
+    restart_button.grid(row=6, column=0, columnspan=3, pady=10)
+
 
 def switch_player():
     """Switches the player between X and O."""
@@ -50,6 +54,20 @@ def make_move(i, j):
         if check_winner():
             return
         switch_player()
+
+
+def restart_game():
+    global board
+    board = [["", "", ""], ["", "", ""], ["", "", ""]]
+
+    for i in range(3):
+        for j in range(3):
+            board_buttons[i][j].config(text="", state="normal")
+    
+    current_player[0] = 'X'
+    player_label.config(text="It's X's turn.", fg="black")
+
+    restart_button.grid_forget()
 
 def show_active_player():
     global player_label
@@ -82,5 +100,9 @@ root.geometry("350x350")
 # Initialize UI
 show_active_player()
 make_move_buttons()
+
+restart_button = tk.Button(root, text="Restart", font=("Cambria", 12, "bold"), fg="white", bg="blue", 
+                           command=restart_game)
+restart_button.grid_forget()
 
 root.mainloop()
