@@ -5,6 +5,7 @@ board = [["", "", ""], ["", "", ""], ["", "", ""]]
 current_player = ["X"]
 
 def check_winner():
+    """Checks if a player has won and displays a message."""
     winning_combinations = [
         [(0, 0), (0, 1), (0, 2)],
         [(1, 0), (1, 1), (1, 2)],
@@ -12,8 +13,8 @@ def check_winner():
         [(0, 0), (1, 0), (2, 0)],
         [(0, 1), (1, 1), (2, 1)],
         [(0, 2), (1, 2), (2, 2)],
-        [(0, 0), (1, 1), (2, 2)], 
-        [(0, 2), (1, 1), (2, 0)] 
+        [(0, 0), (1, 1), (2, 2)],
+        [(0, 2), (1, 1), (2, 0)]
     ]
 
     for combo in winning_combinations:
@@ -28,6 +29,21 @@ def check_winner():
         return True
 
     return False
+
+def update_fonts(event=None):
+    width = root.winfo_width()
+   
+    new_font_size = max(14, width // 25)
+    new_button_font_size = max(16, width // 30)
+
+    restart_button_font_size = min(18, max(12, width // 40))
+
+    player_label.config(font=("Cambria", new_font_size, "bold"))
+    restart_button.config(font=("Cambria", restart_button_font_size))
+
+    for row in board_buttons:
+        for button in row:
+            button.config(font=("Cambria", new_button_font_size))
 
 def display_winner(message):
     color= 'red' if message == "It's a Draw!" else 'green'
@@ -91,9 +107,11 @@ def make_move_buttons():
         root.grid_columnconfigure(i, weight=1, uniform="equal")
         root.grid_rowconfigure(i+1, weight=1, uniform="equal")
 
+
 root = tk.Tk()
 root.title("Tic Tac Toe")
 root.geometry("350x350")
+root.bind("<Configure>", update_fonts)
 
 # Initialize UI
 show_active_player()
