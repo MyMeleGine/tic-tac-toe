@@ -30,6 +30,8 @@ def check_winner():
 
     return False
 
+
+# Making the text size bigger when fullscreen
 def update_fonts(event=None):
     width = root.winfo_width()
    
