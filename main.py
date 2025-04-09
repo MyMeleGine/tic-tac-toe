@@ -30,8 +30,6 @@ def check_winner():
 
     return False
 
-
-# Making the text size bigger when fullscreen
 def update_fonts(event=None):
     width = root.winfo_width()
    
@@ -67,10 +65,17 @@ def make_move(i, j):
     if board[i][j] == "":
         board[i][j] = current_player[0]
         board_buttons[i][j].config(text=current_player[0])
+
+        filled_count = 0
+        for col in range(3):  # This loop is the iteration
+            if board[i][col] != "":
+                filled_count += 1
+
+        print(f"Row {i} has {filled_count} filled spots.")
+
         if check_winner():
             return
         switch_player()
-
 
 def restart_game():
     global board
